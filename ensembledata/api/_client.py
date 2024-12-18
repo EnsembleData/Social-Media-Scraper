@@ -541,6 +541,23 @@ class YoutubeEndpoints:
         params = {k: v for k, v in params.items() if not (v is None or v is USE_DEFAULT)}
         return self.requester.get("/youtube/channel/shorts", params=params, timeout=timeout)
 
+    def channel_streams(
+        self,
+        *,
+        channel_id: str,
+        depth: int,
+        extra_params: Mapping[str, Any] | None = None,
+        timeout: float | None = None,
+    ) -> EDResponse:
+        params: dict[str, Any] = {
+            "browseId": channel_id,
+            "depth": depth,
+        }
+        if extra_params is not None:
+            params = {**extra_params, **params}
+        params = {k: v for k, v in params.items() if not (v is None or v is USE_DEFAULT)}
+        return self.requester.get("/youtube/channel/streams", params=params, timeout=timeout)
+
     def video_details(
         self,
         *,
@@ -797,18 +814,14 @@ class InstagramEndpoints:
         *,
         hashtag: str,
         cursor: str | UseDefault = USE_DEFAULT,
-        chunk_size: int | UseDefault = USE_DEFAULT,
         get_author_info: bool | UseDefault = USE_DEFAULT,
-        alternative_method: bool | UseDefault = USE_DEFAULT,
         extra_params: Mapping[str, Any] | None = None,
         timeout: float | None = None,
     ) -> EDResponse:
         params: dict[str, Any] = {
             "name": hashtag,
             "cursor": cursor,
-            "chunk_size": chunk_size,
             "get_author_info": get_author_info,
-            "alternative_method": alternative_method,
         }
         if extra_params is not None:
             params = {**extra_params, **params}
